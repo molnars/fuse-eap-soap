@@ -1,0 +1,124 @@
+<wsdl:definitions targetNamespace="tedata.mw1.soap" name="MiddlewareServices" xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing" xmlns:tns="tedata.mw1.soap" xmlns:plink="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:xop="http://www.w3.org/2004/08/xop/include" xmlns:senc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s0="wservices.custom_types" xmlns:s12env="http://www.w3.org/2003/05/soap-envelope/" xmlns:s12enc="http://www.w3.org/2003/05/soap-encoding/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:senv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+   <wsdl:types>
+      <xs:schema targetNamespace="wservices.custom_types" elementFormDefault="qualified">
+         <xs:complexType name="QuotaReturn">
+            <xs:complexContent>
+               <xs:extension base="s0:BasicReturn">
+                  <xs:sequence>
+                     <xs:element name="quota" type="s0:QuotaType" minOccurs="0" nillable="true"/>
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="QuotaType">
+            <xs:sequence>
+               <xs:element name="basicQuota" type="xs:double" minOccurs="0" nillable="true"/>
+               <xs:element name="startDate" type="xs:string" minOccurs="0" nillable="true"/>
+               <xs:element name="endDate" type="xs:string" minOccurs="0" nillable="true"/>
+               <xs:element name="remainingTopupQuota" type="xs:double" minOccurs="0" nillable="true"/>
+               <xs:element name="service" type="xs:string" minOccurs="0" nillable="true"/>
+               <xs:element name="totalConsumedQuota" type="xs:double" minOccurs="0" nillable="true"/>
+               <xs:element name="totalAllowedQuota" type="xs:double" minOccurs="0" nillable="true"/>
+               <xs:element name="consumedTopupQuota" type="xs:double" minOccurs="0" nillable="true"/>
+               <xs:element name="totalTopupQuota" type="xs:double" minOccurs="0" nillable="true"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="BasicReturn">
+            <xs:sequence>
+               <xs:element name="errorMessage" type="xs:string" minOccurs="0" nillable="true"/>
+               <xs:element name="success" type="xs:boolean" minOccurs="0" nillable="true"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:element name="BasicReturn" type="s0:BasicReturn"/>
+         <xs:element name="QuotaType" type="s0:QuotaType"/>
+         <xs:element name="QuotaReturn" type="s0:QuotaReturn"/>
+      </xs:schema>
+      <xs:schema targetNamespace="tedata.mw1.soap" elementFormDefault="qualified">
+         <xs:import namespace="wservices.custom_types"/>
+         <xs:complexType name="getUserQuotaResponse">
+            <xs:sequence>
+               <xs:element name="getUserQuotaResult" type="s0:QuotaReturn" minOccurs="0" nillable="true"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="provisionTal2aSubscriberResponse">
+            <xs:sequence>
+               <xs:element name="provisionTal2aSubscriberResult" type="s0:BasicReturn" minOccurs="0" nillable="true"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="getUserQuota">
+            <xs:sequence>
+               <xs:element name="key" type="tns:MandatoryString"/>
+               <xs:element name="userName" type="tns:MandatoryString"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="provisionTal2aSubscriber">
+            <xs:sequence>
+               <xs:element name="key" type="tns:MandatoryString"/>
+               <xs:element name="userName" type="tns:MandatoryString"/>
+               <xs:element name="serviceName" type="tns:MandatoryString"/>
+               <xs:element name="startDate" type="tns:MandatoryString"/>
+               <xs:element name="endDate" type="tns:MandatoryString"/>
+               <xs:element name="resetConsumedQuota" type="xs:boolean"/>
+               <xs:element name="carryOver" type="xs:double"/>
+            </xs:sequence>
+         </xs:complexType>
+         <xs:simpleType name="MandatoryString">
+            <xs:restriction base="xs:string">
+               <xs:minLength value="1"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:element name="provisionTal2aSubscriber" type="tns:provisionTal2aSubscriber"/>
+         <xs:element name="getUserQuota" type="tns:getUserQuota"/>
+         <xs:element name="provisionTal2aSubscriberResponse" type="tns:provisionTal2aSubscriberResponse"/>
+         <xs:element name="getUserQuotaResponse" type="tns:getUserQuotaResponse"/>
+      </xs:schema>
+   </wsdl:types>
+   <wsdl:message name="getUserQuota">
+      <wsdl:part name="getUserQuota" element="tns:getUserQuota"/>
+   </wsdl:message>
+   <wsdl:message name="getUserQuotaResponse">
+      <wsdl:part name="getUserQuotaResponse" element="tns:getUserQuotaResponse"/>
+   </wsdl:message>
+   <wsdl:message name="provisionTal2aSubscriber">
+      <wsdl:part name="provisionTal2aSubscriber" element="tns:provisionTal2aSubscriber"/>
+   </wsdl:message>
+   <wsdl:message name="provisionTal2aSubscriberResponse">
+      <wsdl:part name="provisionTal2aSubscriberResponse" element="tns:provisionTal2aSubscriberResponse"/>
+   </wsdl:message>
+   <wsdl:service name="MiddlewareServices">
+      <wsdl:port name="MiddlewareServices" binding="tns:MiddlewareServices">
+         <soap:address location="http://localhost:8080/tedata/MiddlewareServices"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:portType name="MiddlewareServices">
+      <wsdl:operation name="getUserQuota" parameterOrder="getUserQuota">
+         <wsdl:input name="getUserQuota" message="tns:getUserQuota"/>
+         <wsdl:output name="getUserQuotaResponse" message="tns:getUserQuotaResponse"/>
+      </wsdl:operation>
+      <wsdl:operation name="provisionTal2aSubscriber" parameterOrder="provisionTal2aSubscriber">
+         <wsdl:input name="provisionTal2aSubscriber" message="tns:provisionTal2aSubscriber"/>
+         <wsdl:output name="provisionTal2aSubscriberResponse" message="tns:provisionTal2aSubscriberResponse"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="MiddlewareServices" type="tns:MiddlewareServices">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="getUserQuota">
+         <soap:operation soapAction="getUserQuota" style="document"/>
+         <wsdl:input name="getUserQuota">
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="getUserQuotaResponse">
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="provisionTal2aSubscriber">
+         <soap:operation soapAction="provisionTal2aSubscriber" style="document"/>
+         <wsdl:input name="provisionTal2aSubscriber">
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="provisionTal2aSubscriberResponse">
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+</wsdl:definitions>

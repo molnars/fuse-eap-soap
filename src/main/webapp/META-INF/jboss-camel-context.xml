@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd  http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
+    <bean class="org.test.MyBean" id="helloBean"/>
+    <bean
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="accountsDS">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://localhost:5432/accounts"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="P@ssw0rd"/>
+    </bean>
+    <jdbc:initialize-database data-source="accountsDS" enabled="true">
+        <jdbc:script location="classpath:db-schema.sql"/>
+        <jdbc:script location="classpath:db-test-data.sql"/>
+    </jdbc:initialize-database>
+    <camelContext id="spring-context" xmlns="http://camel.apache.org/schema/spring">
+        <propertyPlaceholder id="placeholder" location="classpath:sql.properties"/>
+        <route id="_route1">
+            <from id="_from1" uri="direct:start"/>
+            <setHeader headerName="id" id="_setId">
+                <simple resultType="java.lang.Integer">${headers.userName}</simple>
+            </setHeader>
+            <to id="_toSQLSelect" uri="sql:{{sql.account}}?dataSource=#accountsDS"/>
+            <!-- <bean id="_bean1" ref="helloBean"/> -->
+        </route>
+    </camelContext>
+</beans>
