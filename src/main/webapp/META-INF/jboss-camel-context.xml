@@ -22,7 +22,7 @@
                 <simple resultType="java.lang.Integer">${headers.userName}</simple>
             </setHeader>
             <to id="_toSQLSelect" uri="sql:{{sql.account}}?dataSource=#accountsDS"/>
-            <!-- <bean id="_bean1" ref="helloBean"/> -->
+            <bean id="_bean1" ref="helloBean"/>
         </route>
     </camelContext>
 </beans>
